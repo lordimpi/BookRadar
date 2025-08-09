@@ -1,0 +1,51 @@
+/* ===== Base original ===== */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+/* ===== Estilos personalizados ===== */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--bs-primary) !important;
+}
+
+footer {
+    font-size: .9rem;
+}
+
+.card {
+    border-radius: .75rem;
+}
+
+.form-control,
+.form-select,
+.btn {
+    border-radius: .5rem;
+}
+
+.table {
+    vertical-align: middle;
+}

@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookRadar.DataAccess", "BookRadar.DataAccess\BookRadar.DataAccess.csproj", "{084CB766-E473-4A85-A328-B4EDEF826940}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookRadar.Bussiness", "BookRadar.Bussiness\BookRadar.Bussiness.csproj", "{5BA1A23B-19B9-4028-9FA5-AB568936EC82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookRadar.Common", "BookRadar.Common\BookRadar.Common.csproj", "{2F87F52F-F574-427E-8B94-04BD32B8698B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookRadar.Configurations", "BookRadar.Configurations\BookRadar.Configurations.csproj", "{D5BA53C4-10C2-4869-99C3-CC4772F61FCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookRadar.WebAPP", "BookRadar.WebAPP\BookRadar.WebAPP.csproj", "{31609D7B-512E-4D66-87B4-97C4AA6AB864}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{084CB766-E473-4A85-A328-B4EDEF826940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{084CB766-E473-4A85-A328-B4EDEF826940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{084CB766-E473-4A85-A328-B4EDEF826940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{084CB766-E473-4A85-A328-B4EDEF826940}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BA1A23B-19B9-4028-9FA5-AB568936EC82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BA1A23B-19B9-4028-9FA5-AB568936EC82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BA1A23B-19B9-4028-9FA5-AB568936EC82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BA1A23B-19B9-4028-9FA5-AB568936EC82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F87F52F-F574-427E-8B94-04BD32B8698B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F87F52F-F574-427E-8B94-04BD32B8698B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F87F52F-F574-427E-8B94-04BD32B8698B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F87F52F-F574-427E-8B94-04BD32B8698B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5BA53C4-10C2-4869-99C3-CC4772F61FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5BA53C4-10C2-4869-99C3-CC4772F61FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5BA53C4-10C2-4869-99C3-CC4772F61FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5BA53C4-10C2-4869-99C3-CC4772F61FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31609D7B-512E-4D66-87B4-97C4AA6AB864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31609D7B-512E-4D66-87B4-97C4AA6AB864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31609D7B-512E-4D66-87B4-97C4AA6AB864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31609D7B-512E-4D66-87B4-97C4AA6AB864}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {934AF085-72FF-4BC8-8F22-ECD03A56206C}
+	EndGlobalSection
+EndGlobal
