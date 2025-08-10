@@ -7,17 +7,16 @@
     <div class="card-body">
         <h2 class="h5 mb-3">Buscar libros por autor</h2>
 
-        <form id="search-form" method="get" class="row g-3">
-            <div class="col-md-8">
-                <input type="text" name="Author" value="@Model.Author" class="form-control" placeholder="Ej: Gabriel García Márquez" required />
-            </div>
-            <div class="col-md-2">
-                <select class="form-select" name="PageSize">
-                    @foreach (var size in new[] { 10, 20, 30, 50 })
-                    {
-                        <option value="@size" selected="@(Model.PageSize == size)">@size por página</option>
-                    }
-                </select>
+        <form id="search-form" method="get" class="row g-3 align-items-end">
+            <div class="col-md-10">
+                <label for="author" class="form-label">Autor</label>
+                <input type="text"
+                       id="author"
+                       name="Author"
+                       value="@Model.Author"
+                       class="form-control"
+                       placeholder="Ej: Gabriel García Márquez"
+                       required />
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">Buscar</button>

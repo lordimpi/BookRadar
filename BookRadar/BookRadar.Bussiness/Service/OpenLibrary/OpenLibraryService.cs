@@ -5,6 +5,7 @@ using BookRadar.Common.Entities;
 using BookRadar.Common.IOptionPattern;
 using BookRadar.Common.Response;
 using BookRadar.DataAccess.UnitOfWork;
+using Mapster;
 
 namespace BookRadar.Bussiness.Service.OpenLibrary
 {
@@ -91,6 +92,19 @@ namespace BookRadar.Bussiness.Service.OpenLibrary
                 Page = page,
                 PageSize = pageSize,
                 TotalItems = response?.NumFound ?? 0
+            };
+        }
+
+        public async Task<PagedResultDTO<HistorialBusquedaDTO>> ObtenerHistorialAsync(
+        int page, int pageSize)
+        {
+            var (Items, TotalRows) = await _unitOfWork.HistorialRepository.ObtenerHistorialAsync(page, pageSize);
+            var dto = Items.Adapt<List<HistorialBusquedaDTO>>();
+            return new PagedResultDTO<HistorialBusquedaDTO>
+            {
+                Items = dto,
+                PageSize = Items.Count,
+                TotalItems = TotalRows
             };
         }
     }

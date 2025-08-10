@@ -49,3 +49,7 @@ footer {
 .table {
     vertical-align: middle;
 }
+
+.white-nowrap {
+    white-space: nowrap;
+}

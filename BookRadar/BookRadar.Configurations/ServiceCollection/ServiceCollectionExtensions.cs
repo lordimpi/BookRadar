@@ -6,6 +6,7 @@ using BookRadar.Common.Mappers;
 using BookRadar.DataAccess.Data;
 using BookRadar.DataAccess.Repositories.Historial;
 using BookRadar.DataAccess.UnitOfWork;
+using BookRadar.DataAccess.Utilities.ADO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,8 @@ namespace BookRadar.Configurations.ServiceCollection
             services.AddScoped<IOpenLibraryService, OpenLibraryService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IHistorialRepository, HistorialRepository>();
+            services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
+            services.AddScoped<ISqlExecutor, SqlExecutor>();
 
             return services;
         }

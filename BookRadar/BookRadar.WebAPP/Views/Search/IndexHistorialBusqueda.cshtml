@@ -1,0 +1,14 @@
+﻿@model HistorialViewModel
+@{
+    ViewData["Title"] = "Historial de Búsquedas";
+}
+
+<div class="container my-4">
+    <div id="resultados-container">
+        @await Html.PartialAsync("_HistorialTable", Model)
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/historial-busqueda.js"></script>
+}

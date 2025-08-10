@@ -1,9 +1,9 @@
 ﻿function qs(sel) { return document.querySelector(sel); }
 
 function scrollToResults() {
-    const container = qs("#resultados-container");
-    if (!container) return;
-    const y = container.getBoundingClientRect().top + window.scrollY - 20;
+    const c = qs("#resultados-container");
+    if (!c) return;
+    const y = c.getBoundingClientRect().top + window.scrollY - 20;
     window.scrollTo({ top: y, behavior: "smooth" });
 }
 
@@ -19,21 +19,20 @@ function setLoading(isLoading) {
 }
 
 async function loadPartial(url, pushState = true) {
-    const container = qs("#resultados-container");
-    if (!container) return;
-
+    const c = qs("#resultados-container");
+    if (!c) return;
     try {
         setLoading(true);
         const res = await fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const html = await res.text();
-        container.innerHTML = html;
+        c.innerHTML = html;
         if (pushState) window.history.pushState({ html }, "", url);
         scrollToResults();
     } catch (err) {
-        if (container.dataset.prevHtml) container.innerHTML = container.dataset.prevHtml;
+        if (c.dataset.prevHtml) c.innerHTML = c.dataset.prevHtml;
         console.error(err);
-        container.insertAdjacentHTML("beforeend",
+        c.insertAdjacentHTML("beforeend",
             '<div class="alert alert-danger mt-3">Ocurrió un error al cargar los resultados. Intenta de nuevo.</div>');
     } finally {
         setLoading(false);
@@ -63,12 +62,34 @@ document.getElementById("search-form")?.addEventListener("submit", function (e) 
     loadPartial(url, true);
 });
 
+document.addEventListener("change", function (e) {
+    const select = e.target;
+    if (select.id === "pageSize" && select.closest("form.search-page-size")) {
+        const form = select.closest("form.search-page-size");
+        const params = new URLSearchParams(new FormData(form)).toString();
+        const base = form.getAttribute("action") || form.dataset.baseUrl;
+        const url = `${base}?${params}`;
+        loadPartial(url, true);
+    }
+});
+
+document.addEventListener("submit", function (e) {
+    const form = e.target;
+    if (form.matches("form.search-page-size")) {
+        e.preventDefault();
+        const params = new URLSearchParams(new FormData(form)).toString();
+        const base = form.getAttribute("action") || form.dataset.baseUrl;
+        const url = `${base}?${params}`;
+        loadPartial(url, true);
+    }
+});
+
 window.addEventListener("popstate", function (e) {
-    const container = qs("#resultados-container");
-    if (!container) return;
+    const c = qs("#resultados-container");
+    if (!c) return;
 
     if (e.state?.html) {
-        container.innerHTML = e.state.html;
+        c.innerHTML = e.state.html;
         scrollToResults();
     } else {
         const url = window.location.href;

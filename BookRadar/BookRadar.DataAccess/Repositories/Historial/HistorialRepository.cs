@@ -1,16 +1,21 @@
-﻿using BookRadar.Common.Entities;
+﻿using BookRadar.Common.DTOs;
+using BookRadar.Common.Entities;
 using BookRadar.DataAccess.Data;
+using BookRadar.DataAccess.Utilities.ADO;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace BookRadar.DataAccess.Repositories.Historial
 {
     public class HistorialRepository : IHistorialRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly ISqlExecutor _sql;
 
-        public HistorialRepository(AppDbContext dbContext)
+        public HistorialRepository(AppDbContext dbContext, ISqlExecutor sql)
         {
             _dbContext = dbContext;
+            _sql = sql;
         }
 
         public async Task AddRangeAsync(IEnumerable<HistorialBusqueda> items)
@@ -37,5 +42,25 @@ namespace BookRadar.DataAccess.Repositories.Historial
                 .ToListAsync();
         }
 
+        public async Task<(List<HistorialBusqueda> Items, int TotalRows)> ObtenerHistorialAsync(
+        int pageNumber, int pageSize)
+        {
+            var p = new[]
+            {
+            SqlParam.In("PageNumber", SqlDbType.Int, pageNumber),
+            SqlParam.In("PageSize", SqlDbType.Int, pageSize),
+            SqlParam.Out("TotalRows", SqlDbType.Int)
+        };
+
+            var items = await _sql.QueryAsync(
+                "ListarHistorialBusquedas",
+                CommandType.StoredProcedure,
+                DataReaderMapper.MapToList<HistorialBusqueda>,
+                parameters: p
+            );
+
+            var totalRows = DbValue.FromDb<int>(p.First(x => x.ParameterName == "@TotalRows").Value);
+            return (items, totalRows);
+        }
     }
 }
