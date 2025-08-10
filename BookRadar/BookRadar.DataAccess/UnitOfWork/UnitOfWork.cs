@@ -1,5 +1,6 @@
 ﻿
 using BookRadar.DataAccess.Data;
+using BookRadar.DataAccess.Repositories.Historial;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BookRadar.DataAccess.UnitOfWork
@@ -9,9 +10,12 @@ namespace BookRadar.DataAccess.UnitOfWork
         private readonly AppDbContext _context;
         private IDbContextTransaction? _currentTransaction;
 
-        public UnitOfWork(AppDbContext context)
+        public IHistorialRepository HistorialRepository { get; }
+
+        public UnitOfWork(AppDbContext context, IHistorialRepository historialRepository)
         {
             _context = context;
+            HistorialRepository = historialRepository;
         }
 
         public async Task<int> SaveChangesAsync()

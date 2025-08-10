@@ -1,5 +1,4 @@
 ﻿using BookRadar.Bussiness.Service.OpenLibrary;
-using BookRadar.Common.DTOs;
 using BookRadar.WebAPP.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +24,11 @@ namespace BookRadar.WebAPP.Controllers
                 vm.Items = result.Items;
                 vm.TotalItems = result.TotalItems;
                 vm.TotalPages = result.TotalPages;
+            }
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_Resultados", vm);
             }
 
             return View(vm);

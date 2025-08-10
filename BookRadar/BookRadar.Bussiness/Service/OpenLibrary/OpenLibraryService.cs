@@ -1,26 +1,40 @@
 ﻿using BookRadar.Bussiness.Service.Http;
 using BookRadar.Common.Configurations;
 using BookRadar.Common.DTOs;
+using BookRadar.Common.Entities;
 using BookRadar.Common.IOptionPattern;
 using BookRadar.Common.Response;
+using BookRadar.DataAccess.UnitOfWork;
 
 namespace BookRadar.Bussiness.Service.OpenLibrary
 {
     public class OpenLibraryService : IOpenLibraryService
     {
         private readonly IHttpService _httpService;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly string _baseUrl;
 
-        public OpenLibraryService(IHttpService httpService, IGenericOptionsService<OpenLibraryOptions> optionsService)
+        public OpenLibraryService(IHttpService httpService, IGenericOptionsService<OpenLibraryOptions> optionsService, IUnitOfWork unitOfWork)
         {
             _httpService = httpService;
+            _unitOfWork = unitOfWork;
             _baseUrl = optionsService.GetSnapshotOptions().OpenLibrary;
         }
 
         public async Task<PagedResultDTO<LibroDTO>> SearchByAuthorAsync(string author, int page = 1, int pageSize = 10)
         {
-            var url = $"{_baseUrl}search.json?author={Uri.EscapeDataString(author)}&limit={pageSize}&page={page}&fields=title,first_publish_year,publisher,numFound";
+            if (string.IsNullOrWhiteSpace(author))
+            {
+                return new PagedResultDTO<LibroDTO>
+                {
+                    Items = [],
+                    Page = page,
+                    PageSize = pageSize,
+                    TotalItems = 0
+                };
+            }
 
+            var url = $"{_baseUrl}search.json?author={Uri.EscapeDataString(author)}&limit={pageSize}&page={page}&fields=title,first_publish_year,publisher,numFound";
             var response = await _httpService.GetAsync<OpenLibraryResponse>(url);
 
             var items = response?.Docs?
@@ -28,9 +42,48 @@ namespace BookRadar.Bussiness.Service.OpenLibrary
                 {
                     Titulo = d.Title ?? string.Empty,
                     AnioPublicacion = d.FirstPublishYear,
-                    Editorial = d.Publisher?.FirstOrDefault()
+                    Editorial = d.Publisher?.FirstOrDefault() ?? string.Empty
                 })
                 .ToList() ?? [];
+
+            if (items.Any())
+            {
+                var fecha = DateTime.UtcNow;
+                var limiteTiempo = fecha.AddMinutes(-1);
+
+                var recientes = await _unitOfWork.HistorialRepository
+                    .GetRecentTitlesByAuthorAsync(author, limiteTiempo);
+
+                var setRecientes = recientes.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                var nuevos = items
+                    .Where(libro => !setRecientes.Contains(libro.Titulo))
+                    .Select(libro => new HistorialBusqueda
+                    {
+                        Autor = author,
+                        Titulo = libro.Titulo,
+                        AnioPublicacion = libro.AnioPublicacion,
+                        Editorial = libro.Editorial ?? string.Empty,
+                        FechaConsulta = fecha
+                    })
+                    .ToList();
+
+                if (nuevos.Count > 0)
+                {
+                    await _unitOfWork.BeginTransactionAsync();
+                    try
+                    {
+                        await _unitOfWork.HistorialRepository.AddRangeAsync(nuevos);
+                        await _unitOfWork.SaveChangesAsync();
+                        await _unitOfWork.CommitAsync();
+                    }
+                    catch
+                    {
+                        await _unitOfWork.RollbackAsync();
+                        throw;
+                    }
+                }
+            }
 
             return new PagedResultDTO<LibroDTO>
             {
@@ -40,6 +93,5 @@ namespace BookRadar.Bussiness.Service.OpenLibrary
                 TotalItems = response?.NumFound ?? 0
             };
         }
-
     }
 }

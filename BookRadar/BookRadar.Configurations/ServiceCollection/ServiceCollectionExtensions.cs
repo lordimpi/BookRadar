@@ -1,7 +1,12 @@
 ﻿using BookRadar.Bussiness.Service.Http;
 using BookRadar.Bussiness.Service.OpenLibrary;
+using BookRadar.Common.Configurations;
 using BookRadar.Common.IOptionPattern;
 using BookRadar.Common.Mappers;
+using BookRadar.DataAccess.Data;
+using BookRadar.DataAccess.Repositories.Historial;
+using BookRadar.DataAccess.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -17,7 +22,14 @@ namespace BookRadar.Configurations.ServiceCollection
         {
             // Habilita soporte para IOptions
             services.AddOptions();
-            
+
+            // Registrar DbContext usando IGenericOptionsService
+            services.AddDbContext<AppDbContext>((sp, options) =>
+            {
+                var connOptions = sp.GetRequiredService<IGenericOptionsService<DbOptions>>().GetSnapshotOptions();
+                options.UseSqlServer(connOptions.DefaultConnection);
+            });
+
             // Registra mapeos de Mapster
             MapsterConfig.RegisterMappings();
             
@@ -25,7 +37,9 @@ namespace BookRadar.Configurations.ServiceCollection
 
             services.AddScoped(typeof(IGenericOptionsService<>), typeof(GenericOptionsService<>));
             services.AddScoped<IOpenLibraryService, OpenLibraryService>();
-            
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IHistorialRepository, HistorialRepository>();
+
             return services;
         }
 

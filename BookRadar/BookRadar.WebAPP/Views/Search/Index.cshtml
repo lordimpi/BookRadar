@@ -7,7 +7,7 @@
     <div class="card-body">
         <h2 class="h5 mb-3">Buscar libros por autor</h2>
 
-        <form method="post" class="row g-3">
+        <form id="search-form" method="get" class="row g-3">
             <div class="col-md-8">
                 <input type="text" name="Author" value="@Model.Author" class="form-control" placeholder="Ej: Gabriel García Márquez" required />
             </div>
@@ -26,89 +26,9 @@
     </div>
 </div>
 
-@if (!string.IsNullOrWhiteSpace(Model.Author))
-{
-    <div class="card shadow-sm mt-4">
-        <div class="card-body">
-            <h5 class="card-title">Resultados</h5>
-            <div class="text-muted mb-2">
-                Página @Model.Page de @Model.TotalPages · Total: @Model.TotalItems
-            </div>
+<div id="resultados-container" class="mt-4">
+</div>
 
-            @if (Model.Items.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Título</th>
-                                <th>Año</th>
-                                <th>Editorial</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var libro in Model.Items)
-                            {
-                                <tr>
-                                    <td>@libro.Titulo</td>
-                                    <td>@(libro.AnioPublicacion?.ToString() ?? "—")</td>
-                                    <td>@(libro.Editorial ?? "—")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Paginador -->
-                int start = Math.Max(1, Model.Page - 2);
-                int end = Math.Min(Model.TotalPages, Model.Page + 2);
-
-                if (Model.Page <= 3)
-                {
-                    end = Math.Min(Model.TotalPages, 5);
-                }
-
-                if (Model.Page >= Model.TotalPages - 2)
-                {
-                    start = Math.Max(1, Model.TotalPages - 4);
-                }
-
-                <nav>
-                    <ul class="pagination justify-content-center flex-wrap">
-                        <!-- Botón Primero -->
-                        <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                            <a class="page-link" href="@Url.Action("Index", new { author = Model.Author, page = 1, pageSize = Model.PageSize })">Primero</a>
-                        </li>
-
-                        <!-- Botón Anterior -->
-                        <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
-                            <a class="page-link" href="@Url.Action("Index", new { author = Model.Author, page = Model.Page - 1, pageSize = Model.PageSize })">&laquo;</a>
-                        </li>
-
-                        <!-- Páginas -->
-                        @for (int i = start; i <= end; i++)
-                        {
-                            <li class="page-item @(i == Model.Page ? "active" : "")">
-                                <a class="page-link" href="@Url.Action("Index", new { author = Model.Author, page = i, pageSize = Model.PageSize })">@i</a>
-                            </li>
-                        }
-
-                        <!-- Botón Siguiente -->
-                        <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                            <a class="page-link" href="@Url.Action("Index", new { author = Model.Author, page = Model.Page + 1, pageSize = Model.PageSize })">&raquo;</a>
-                        </li>
-
-                        <!-- Botón Último -->
-                        <li class="page-item @(Model.Page == Model.TotalPages ? "disabled" : "")">
-                            <a class="page-link" href="@Url.Action("Index", new { author = Model.Author, page = Model.TotalPages, pageSize = Model.PageSize })">Último</a>
-                        </li>
-                    </ul>
-                </nav>
-            }
-            else
-            {
-                <div class="text-muted">No se encontraron resultados.</div>
-            }
-        </div>
-    </div>
+@section Scripts {
+    <script src="~/js/search.js"></script>
 }

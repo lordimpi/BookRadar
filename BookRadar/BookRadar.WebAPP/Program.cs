@@ -1,5 +1,7 @@
 using BookRadar.Common.Configurations;
 using BookRadar.Configurations.ServiceCollection;
+using BookRadar.DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +13,16 @@ builder.Services.AddBookRadarOptionsCore();
 
 //Vincular clases Configuration con la sección del appsettings.json
 builder.Services.BindOptions<OpenLibraryOptions>(builder.Configuration, "APIs");
+builder.Services.BindOptions<DbOptions>(builder.Configuration, "ConnectionStrings");
 
 var app = builder.Build();
+
+//Crear BD y aplicar migraciones si es necesario
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
