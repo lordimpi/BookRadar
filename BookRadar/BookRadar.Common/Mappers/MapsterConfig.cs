@@ -14,8 +14,13 @@ namespace BookRadar.Common.Mappers
 
         private static void MapeoHistorialBusqueda()
         {
-            TypeAdapterConfig<HistorialBusqueda, HistorialBusquedaDTO>.NewConfig();
-            TypeAdapterConfig<HistorialBusquedaDTO, HistorialBusqueda>.NewConfig();
+            TypeAdapterConfig<HistorialBusqueda, HistorialBusquedaDTO>
+                .NewConfig()
+                .Map(dest => dest.FechaConsultaUtc, src => src.FechaConsulta);
+
+            TypeAdapterConfig<HistorialBusquedaDTO, HistorialBusqueda>
+                .NewConfig()
+                .Map(dest => dest.FechaConsulta, src => src.FechaConsultaUtc);
         }
     }
 }
